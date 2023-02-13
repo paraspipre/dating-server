@@ -41,7 +41,7 @@ const server = app.listen(process.env.PORT, () =>
 
 const io = socket(server, {
    cors: {
-      origin: "https://dating-frontend-pi.vercel.app/"
+      origin: "https://dating-frontend-pi.vercel.app"
    },
 });
 

@@ -14,8 +14,12 @@ const storage = multer.memoryStorage()
 const upload = multer({storage:storage})
 const authRoutes = require("./routes/auth")
 
+const corsOptions = {
+  origin: 'https://dating-frontend-paras11917.vercel.app'
+};
+app.use(cors(corsOptions));
+
 app.use(morgan('dev'))
-app.use(cors());
 app.use(express.json());
 app.use(cookieParser())
 
@@ -41,7 +45,7 @@ const server = app.listen(process.env.PORT, () =>
 
 const io = socket(server, {
    cors: {
-      origin: "https://dating-frontend-paras11917.vercel.app/"
+      origin: "https://dating-frontend-paras11917.vercel.app"
    },
 });
 

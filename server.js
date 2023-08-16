@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const socket = require("socket.io");
+const http = require("http");
 require("dotenv").config();
 const cookieParser = require('cookie-parser')
 const morgan = require('morgan')
@@ -15,7 +16,7 @@ const upload = multer({storage:storage})
 const authRoutes = require("./routes/auth")
 
 const corsOptions = {
-  origin: 'https://dating-frontend-paras11917.vercel.app'
+   origin: 'https://dating-frontend-paras11917.vercel.app'
 };
 app.use(cors(corsOptions));
 
@@ -25,24 +26,21 @@ app.use(cookieParser())
 
 mongoose.set("strictQuery",false)
 
-mongoose
-   .connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-   })
-   .then(() => {
-      console.log("DB Connetion Successfull");
+mongoose.connect(process.env.MONGO_URL, {
+   useNewUrlParser: true,
+   useUnifiedTopology: true,
+})
+.then(() => {
+   console.log("DB Connetion Successfull");
    })
    .catch((err) => {
       console.log(err.message);
    });
-
-app.use("/api/auth",authRoutes)
-
-const server = app.listen(process.env.PORT, () =>
-   console.log(`Server started on ${process.env.PORT}`)
-);
-
+   
+   app.use("/api/auth",authRoutes)
+   
+   
+const server = http.createServer(app);
 const io = socket(server, {
    cors: {
       origin: "https://dating-frontend-paras11917.vercel.app"
@@ -95,4 +93,8 @@ io.on("connection", (socket) => {
    });
 });
 
-io.listen(8000)
+const port = process.env.PORT || 3001;
+server.listen(port, () =>
+   console.log(`Server started on ${process.env.PORT}`)
+);
+
